@@ -1,0 +1,6 @@
+Question,Large Chunks 1000/200,Small Chunks 500/100,Better Strategy,Observation
+What is the Transformer architecture?,Relevant architecture passage at rank 1,Relevant architecture passages at ranks 1 and 2,500/100,Small chunks provided more focused Transformer-specific retrieval
+What is BERT?,Relevant but includes structural content,Clear explanatory BERT passages,500/100,Small chunks retrieved more focused definition-level content
+What is Chain of Thought prompting?,Relevant but broader passages,Direct explanation at rank 1,500/100,Small chunks produced more precise retrieval
+What is Retrieval Augmented Generation?,Relevant introduction and citation content,Direct RAG definition at rank 1,500/100,Small chunks retrieved the clearest definition
+What is LoRA and how does it work?,Direct rank-decomposition explanation retrieved,Relevant advantages and concepts retrieved,1000/200,Large chunks contained a more complete technical explanation

@@ -1,0 +1,11 @@
+Question,Answer Quality,Status,Observation
+What is the Transformer architecture?,Correct and concise,Successful,Retrieved the correct Transformer architecture information
+What is BERT?,Correct definition,Successful,Correctly described bidirectional representations and pre-training
+What is Chain of Thought prompting?,Relevant but not a direct definition,Partial,Answer described related approaches instead of clearly defining CoT
+What is Retrieval Augmented Generation?,Correct definition,Successful,Correctly explained parametric and non-parametric memory with retrieval
+What is LoRA and how does it work?,Correct technical explanation,Successful,Correctly explained rank-decomposition matrices and reduced trainable parameters
+What is instruction tuning?,Relevant sources retrieved but answer failed,Failed,InstructGPT sources were retrieved but the generator incorrectly stated information was unavailable
+What is self-attention?,Correct definition,Successful,Clear and accurate explanation from the Transformer paper
+How does GPT generate text?,Incomplete,Partial,Retrieved GPT-3 sources but did not provide a direct generation mechanism
+What are the advantages of the Transformer model?,Mostly correct,Partial,Relevant advantages were given but one statement appeared unrelated
+How does LoRA reduce parameters required for fine-tuning?,Correct core explanation,Successful,Correctly identified trainable low-rank decomposition matrices

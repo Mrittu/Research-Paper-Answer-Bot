@@ -1,0 +1,11 @@
+Question,Retrieved Sources Relevant,Answer Accurate,Answer Grounded,Notes
+What is the Transformer architecture?,Yes,Yes,Yes,Relevant Transformer passages retrieved
+What is BERT?,Yes,Yes,Yes,Relevant BERT information retrieved
+What is Chain of Thought prompting?,Yes,Yes,Yes,Relevant prompting passages retrieved
+What is Retrieval Augmented Generation?,Yes,Yes,Yes,Relevant RAG passages retrieved
+What is LoRA and how does it work?,Yes,Yes,Yes,Relevant LoRA passages retrieved
+What is instruction tuning?,Yes,Yes,Yes,Relevant instruction tuning information retrieved
+What is self-attention?,Yes,Yes,Yes,Relevant attention passages retrieved
+How does GPT generate text?,Yes,Yes,Yes,Relevant GPT passages retrieved
+What are the advantages of the Transformer model?,Yes,Yes,Yes,Relevant Transformer passages retrieved
+How does LoRA reduce the number of parameters required for fine-tuning?,Yes,Yes,Yes,Relevant LoRA passages retrieved

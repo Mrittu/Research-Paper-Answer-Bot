@@ -1,0 +1,6 @@
+Experiment,Configuration Compared,Result,Selected Configuration,Reason
+Embedding Model Comparison,MiniLM vs BGE,BGE performed better overall,BAAI/bge-small-en-v1.5,Retrieved more direct and definition-oriented passages
+Chunking Strategy Comparison,1000/200 vs 500/100,500/100 performed better overall,500 character chunks with 100 overlap,Produced more focused and precise retrieval
+Original RAG Evaluation,Original prompt with Top-5 retrieval,"6 successful, 3 partial, 1 failed",Baseline,Good answer coverage but occasional irrelevant information
+Improved Prompt Evaluation,Improved prompt with Top-5 retrieval,Improved some answers but hallucinations remained,Not selected,More detailed answers but sometimes introduced unsupported claims
+Strict RAG Evaluation,Strict prompt with Top-3 retrieval,More grounded and reliable answers,Final answer-generation strategy,Reduced hallucination by requiring explicit support from retrieved context

@@ -1,0 +1,6 @@
+Question,MiniLM Retrieval Quality,BGE Retrieval Quality,Better Model,Observation
+What is the Transformer architecture?,Relevant but first result was less direct,Highly relevant architecture passage ranked first,BGE,BGE retrieved the exact Transformer architecture passage at rank 1
+What is BERT?,Relevant BERT passages,Highly relevant introductory BERT content,BGE,BGE retrieved a clearer definition-level passage
+What is Chain of Thought prompting?,Relevant passages,Relevant introductory and explanatory passages,BGE,BGE provided a stronger high-level explanation
+What is Retrieval Augmented Generation?,Relevant but later discussion passages,Relevant introductory RAG content,BGE,BGE retrieved definition-oriented content
+What is LoRA and how does it work?,Highly relevant direct technical explanation,Relevant but some less direct results,MiniLM,MiniLM retrieved the rank decomposition explanation at rank 1
