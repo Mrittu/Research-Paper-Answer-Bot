@@ -18,6 +18,16 @@ if str(PROJECT_ROOT) not in sys.path:
 
 
 # ============================================================
+# DATABASE CONFIGURATION
+# ============================================================
+
+CHROMA_PATH = PROJECT_ROOT / "data" / "chroma_db_small_chunks"
+
+# This is the collection that contains your 2368 chunks
+COLLECTION_NAME = "research_papers_small_chunks"
+
+
+# ============================================================
 # PAGE CONFIG
 # ============================================================
 
@@ -47,6 +57,7 @@ st.markdown(
         border-radius: 12px;
         border-left: 5px solid #4f8bf9;
         margin-bottom: 20px;
+        line-height: 1.7;
     }
 
     </style>
@@ -76,32 +87,20 @@ def load_embeddings():
 @st.cache_resource
 def load_vector_db():
 
-    chroma_path = (
-        PROJECT_ROOT
-        / "data"
-        / "chroma_db_small_chunks"
+    if not CHROMA_PATH.exists():
+        return None, 0
+
+    embeddings = load_embeddings()
+
+    vector_db = Chroma(
+        collection_name=COLLECTION_NAME,
+        persist_directory=str(CHROMA_PATH),
+        embedding_function=embeddings
     )
 
-    # Check whether database folder exists
-    if not chroma_path.exists():
-        return None, 0
+    document_count = vector_db._collection.count()
 
-    try:
-
-        embeddings = load_embeddings()
-
-        vector_db = Chroma(
-            persist_directory=str(chroma_path),
-            embedding_function=embeddings
-        )
-
-        # Count documents in ChromaDB
-        document_count = vector_db._collection.count()
-
-        return vector_db, document_count
-
-    except Exception:
-        return None, 0
+    return vector_db, document_count
 
 
 # ============================================================
@@ -128,20 +127,13 @@ def check_ollama():
 def generate_answer(question, vector_db):
 
     # --------------------------------------------------------
-    # STEP 1: RETRIEVE TOP 3 DOCUMENTS
+    # STEP 1: RETRIEVE TOP 3 MOST RELEVANT DOCUMENTS
     # --------------------------------------------------------
 
     retrieved_docs = vector_db.similarity_search(
         question,
         k=3
     )
-
-    if not retrieved_docs:
-        return (
-            "I could not find relevant information "
-            "in the retrieved research papers.",
-            []
-        )
 
     # --------------------------------------------------------
     # STEP 2: BUILD CONTEXT
@@ -160,14 +152,12 @@ def generate_answer(question, vector_db):
             "page_number",
             doc.metadata.get(
                 "page",
-                "Unknown"
+                "Unknown Page"
             )
         )
 
         context += f"""
-
 SOURCE {i}
-
 Paper: {paper}
 Page: {page}
 
@@ -193,29 +183,26 @@ STRICT RULES:
 
 2. Do NOT use outside knowledge.
 
-3. Do NOT infer information that is not explicitly supported
-by the retrieved research paper text.
+3. Do NOT infer technical mechanisms that are not explicitly
+   described in the retrieved text.
 
 4. Do NOT combine unrelated information from different papers.
 
 5. Ignore retrieved information that does not directly answer
-the user's question.
+   the user's question.
 
 6. If the retrieved context provides only a partial answer,
-clearly state that the available research papers provide
-only a partial answer.
+   clearly state that the available research papers provide
+   only a partial answer.
 
-7. If the answer is not supported by the retrieved context,
-say exactly:
+7. If the answer is not supported by the retrieved context, say
+   exactly:
 
-"I could not find a supported answer in the retrieved research papers."
+   "I could not find a supported answer in the retrieved research papers."
 
 8. Give the direct answer first.
 
-9. At the end of the answer, mention the source number(s)
-actually used in this format:
-
-Sources used: SOURCE 1, SOURCE 2
+ 
 
 RETRIEVED RESEARCH PAPER CONTEXT:
 
@@ -237,12 +224,7 @@ ANSWER:
         prompt=prompt
     )
 
-    answer = response.get(
-        "response",
-        "I could not generate an answer."
-    )
-
-    return answer, retrieved_docs
+    return response["response"], retrieved_docs
 
 
 # ============================================================
@@ -252,15 +234,10 @@ ANSWER:
 def find_pdf_files():
 
     possible_pdf_folders = [
-
         PROJECT_ROOT / "data" / "research_papers",
-
         PROJECT_ROOT / "data" / "papers",
-
         PROJECT_ROOT / "data",
-
         PROJECT_ROOT / "papers"
-
     ]
 
     pdf_files = []
@@ -269,16 +246,13 @@ def find_pdf_files():
 
         if folder.exists():
 
-            found_files = list(
-                folder.glob("*.pdf")
-            )
+            found_files = list(folder.glob("*.pdf"))
 
             if found_files:
-
                 pdf_files = found_files
                 break
 
-    return pdf_files
+    return sorted(pdf_files)
 
 
 # ============================================================
@@ -298,21 +272,13 @@ with st.sidebar:
         )
 
         for pdf in pdf_files:
-
             st.write(f"📄 {pdf.name}")
 
     else:
 
-        st.warning(
-            "No PDF files found."
-        )
+        st.warning("No PDF files found.")
 
     st.divider()
-
-
-    # ========================================================
-    # MODEL STATUS
-    # ========================================================
 
     st.header("🤖 Model")
 
@@ -320,41 +286,27 @@ with st.sidebar:
 
     if ollama_ok:
 
-        st.success(
-            "Ollama Connected"
-        )
+        st.success("Ollama Connected")
 
-        st.caption(
-            "Model: llama3.2:latest"
-        )
-
-        st.caption(
-            "Local AI Model"
-        )
+        st.caption("Model: llama3.2:latest")
+        st.caption("Local AI Model")
 
     else:
 
-        st.error(
-            "Ollama Not Connected"
-        )
+        st.error("Ollama Not Connected")
 
         st.caption(
-            "Ollama is required to generate answers."
+            "Make sure Ollama is running."
         )
 
     st.divider()
 
-
-    # ========================================================
-    # ABOUT
-    # ========================================================
-
     st.header("ℹ️ About")
 
     st.write(
-        "This bot searches AI research papers stored "
-        "in ChromaDB and generates answers using only "
-        "the retrieved research paper content."
+        "This bot searches research papers stored in "
+        "ChromaDB and generates answers using only the "
+        "retrieved content."
     )
 
 
@@ -378,23 +330,10 @@ st.divider()
 
 
 # ============================================================
-# DATABASE PATH
-# ============================================================
-
-CHROMA_DB_PATH = (
-    PROJECT_ROOT
-    / "data"
-    / "chroma_db_small_chunks"
-)
-
-
-# ============================================================
 # LOAD DATABASE
 # ============================================================
 
-with st.spinner(
-    "Loading knowledge base..."
-):
+with st.spinner("Loading knowledge base..."):
 
     vector_db, document_count = load_vector_db()
 
@@ -406,44 +345,13 @@ with st.spinner(
 if vector_db is None:
 
     st.error(
-        "❌ The knowledge base could not be loaded or "
-        "contains 0 document chunks."
+        "❌ Vector database could not be loaded."
     )
 
-    st.write(
-        "**Expected database location:**"
+    st.info(
+        f"Expected database location:\n\n"
+        f"`{CHROMA_PATH}`"
     )
-
-    st.code(
-        str(CHROMA_DB_PATH)
-    )
-
-    st.write(
-        "**Database folder exists:**",
-        CHROMA_DB_PATH.exists()
-    )
-
-    if CHROMA_DB_PATH.exists():
-
-        try:
-
-            files = [
-                item.name
-                for item in CHROMA_DB_PATH.iterdir()
-            ]
-
-            st.write(
-                "**Files inside database folder:**"
-            )
-
-            st.write(files)
-
-        except Exception as e:
-
-            st.write(
-                "Could not read database folder:",
-                str(e)
-            )
 
     st.stop()
 
@@ -451,7 +359,7 @@ if vector_db is None:
 if document_count == 0:
 
     st.error(
-        "❌ The knowledge base contains 0 document chunks."
+        f"❌ The knowledge base contains 0 document chunks."
     )
 
     st.write(
@@ -459,35 +367,12 @@ if document_count == 0:
     )
 
     st.code(
-        str(CHROMA_DB_PATH)
+        str(CHROMA_PATH)
     )
 
     st.write(
-        "**Database folder exists:**",
-        CHROMA_DB_PATH.exists()
+        f"**Collection name:** `{COLLECTION_NAME}`"
     )
-
-    if CHROMA_DB_PATH.exists():
-
-        try:
-
-            files = [
-                item.name
-                for item in CHROMA_DB_PATH.iterdir()
-            ]
-
-            st.write(
-                "**Files inside database folder:**"
-            )
-
-            st.write(files)
-
-        except Exception as e:
-
-            st.write(
-                "Could not read database folder:",
-                str(e)
-            )
 
     st.stop()
 
@@ -501,6 +386,10 @@ st.success(
     f"{document_count} document chunks found."
 )
 
+st.caption(
+    f"Collection: {COLLECTION_NAME}"
+)
+
 
 # ============================================================
 # QUESTION INPUT
@@ -508,9 +397,7 @@ st.success(
 
 question = st.text_input(
     "Ask a question",
-    placeholder=(
-        "Example: What is the Transformer architecture?"
-    )
+    placeholder="Example: What is the Transformer architecture?"
 )
 
 ask_button = st.button(
@@ -542,6 +429,10 @@ if ask_button:
 
         try:
 
+            # =================================================
+            # GENERATE STRICT RAG ANSWER
+            # =================================================
+
             with st.spinner(
                 "Searching research papers and generating answer..."
             ):
@@ -550,7 +441,6 @@ if ask_button:
                     question,
                     vector_db
                 )
-
 
             # =================================================
             # CHECK RETRIEVED DOCUMENTS
@@ -565,15 +455,13 @@ if ask_button:
 
             else:
 
-                # =============================================
+                # =================================================
                 # DISPLAY ANSWER
-                # =============================================
+                # =================================================
 
                 st.divider()
 
-                st.header(
-                    "🤖 Answer"
-                )
+                st.header("🤖 Answer")
 
                 st.markdown(
                     f"""
@@ -584,21 +472,17 @@ if ask_button:
                     unsafe_allow_html=True
                 )
 
-
-                # =============================================
+                # =================================================
                 # DISPLAY SOURCES
-                # =============================================
+                # =================================================
 
                 st.divider()
 
-                st.header(
-                    "📚 Top 3 Supporting Passages"
-                )
+                st.header("📚 Top-3 Supporting Passages")
 
                 displayed_sources = set()
 
                 source_number = 1
-
 
                 for doc in retrieved_docs:
 
@@ -623,21 +507,14 @@ if ask_button:
                         )
                     )
 
-
-                    # Avoid duplicate sources
                     source_key = (
                         f"{paper}-{page}-{source_file}"
                     )
 
                     if source_key in displayed_sources:
-
                         continue
 
-
-                    displayed_sources.add(
-                        source_key
-                    )
-
+                    displayed_sources.add(source_key)
 
                     with st.expander(
                         f"Source {source_number} — "
@@ -657,16 +534,14 @@ if ask_button:
                         )
 
                         st.markdown(
-                            "### Supporting Passage"
+                            "### Relevant Supporting Passage"
                         )
 
                         st.write(
                             doc.page_content
                         )
 
-
                     source_number += 1
-
 
         except Exception as e:
 
