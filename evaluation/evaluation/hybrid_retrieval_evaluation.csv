@@ -1,0 +1,6 @@
+question,hybrid_sources,retrieval_time_seconds
+What is BERT?,Bert (Page 1) [Dense + BM25] Hybrid Score: 0.6169 | Bert (Page 3) [Dense + BM25] Hybrid Score: 0.5463 | Bert (Page 1) [Dense + BM25] Hybrid Score: 0.4705,0.1125
+What is the main contribution of the Transformer architecture?,Attention Is All You Need (Page 3) [Dense + BM25] Hybrid Score: 0.9555 | Attention Is All You Need (Page 2) [Dense + BM25] Hybrid Score: 0.7423 | Attention Is All You Need (Page 8) [Dense + BM25] Hybrid Score: 0.6359,0.0411
+What is LoRA?,Lora (Page 2) [Dense + BM25] Hybrid Score: 0.6130 | Lora (Page 10) [BM25] Hybrid Score: 0.4000 | Lora (Page 1) [Dense] Hybrid Score: 0.3779,0.0295
+What is Retrieval-Augmented Generation?,Rag (Page 2) [Dense + BM25] Hybrid Score: 0.9781 | Rag (Page 1) [Dense + BM25] Hybrid Score: 0.8981 | Gpt3 (Page 71) [Dense + BM25] Hybrid Score: 0.8925,0.0331
+What is Chain of Thought prompting?,Chain Of Thought (Page 3) [Dense + BM25] Hybrid Score: 0.8032 | Chain Of Thought (Page 2) [Dense + BM25] Hybrid Score: 0.7144 | Chain Of Thought (Page 6) [Dense + BM25] Hybrid Score: 0.7005,0.0328

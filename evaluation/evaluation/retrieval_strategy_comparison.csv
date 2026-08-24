@@ -1,0 +1,6 @@
+question,dense_sources,dense_retrieval_time_seconds,mmr_sources,mmr_retrieval_time_seconds
+What is BERT?,Bert (Page 1) | Bert (Page 1) | Bert (Page 3),0.1576,Bert (Page 1) | Bert (Page 3) | Bert (Page 1),0.0293
+What is the main contribution of the Transformer architecture?,Attention Is All You Need (Page 3) | Attention Is All You Need (Page 3) | Attention Is All You Need (Page 2),0.0265,Attention Is All You Need (Page 3) | Attention Is All You Need (Page 8) | Lora (Page 15),0.0286
+What is LoRA?,Lora (Page 2) | Lora (Page 2) | Lora (Page 1),0.024,Lora (Page 2) | Lora (Page 1) | Lora (Page 12),0.0246
+What is Retrieval-Augmented Generation?,Rag (Page 2) | Rag (Page 2) | Rag (Page 1),0.0256,Rag (Page 2) | Gpt3 (Page 71) | Rag (Page 8),0.0254
+What is Chain of Thought prompting?,Chain Of Thought (Page 3) | Chain Of Thought (Page 3) | Chain Of Thought (Page 24),0.0256,Chain Of Thought (Page 3) | Chain Of Thought (Page 24) | Chain Of Thought (Page 22),0.0257
